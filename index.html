@@ -3,8 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport"
-      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>BACKROOMS // LEVEL 0</title>
+content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+
+<title>BACKROOMS // SURVIVAL</title>
 
 <style>
 *{
@@ -22,192 +23,227 @@ html,body{
     touch-action:none;
 }
 
-#game{
-    position:fixed;
-    inset:0;
-    width:100%;
-    height:100%;
+canvas{
+    display:block;
 }
 
-/* INTRO */
+/* =========================
+INTRO
+========================= */
 
 #intro{
     position:fixed;
     inset:0;
-    z-index:100;
-    background:
-        radial-gradient(circle at center,#2b260d 0%,#090806 65%,#000 100%);
+    z-index:1000;
     display:flex;
-    align-items:center;
     justify-content:center;
-    color:white;
+    align-items:center;
     text-align:center;
+    color:white;
+    background:
+    radial-gradient(circle,#2d290e,#090806 60%,#000);
 }
 
-.intro-content{
-    width:min(90%,600px);
+.introBox{
+    width:90%;
+    max-width:700px;
 }
 
-.glitch{
-    font-size:clamp(45px,10vw,100px);
+.logo{
+    font-size:clamp(45px,11vw,110px);
     letter-spacing:12px;
-    color:#e5d87b;
+    color:#dfd06b;
     text-shadow:
-        3px 0 #ff0000,
-        -3px 0 #00ffff;
+    3px 0 red,
+    -3px 0 cyan;
     animation:glitch 2s infinite;
 }
 
-.subtitle{
-    margin-top:15px;
-    color:#aaa;
+.introSub{
+    color:#888;
     letter-spacing:4px;
-    font-size:13px;
+    margin-top:15px;
+    font-size:12px;
 }
 
-#startButton{
+.bigButton{
     margin-top:45px;
-    padding:18px 50px;
+    padding:18px 55px;
+    background:rgba(255,220,80,.08);
     border:1px solid #aaa;
-    background:rgba(255,220,70,.08);
-    color:#fff;
+    color:white;
     cursor:pointer;
     letter-spacing:5px;
     font-weight:bold;
-    transition:.3s;
 }
 
-#startButton:hover{
-    background:#d5c34d;
+.bigButton:hover{
+    background:#d5c44c;
     color:#111;
-    box-shadow:0 0 35px #d5c34d;
+    box-shadow:0 0 40px #d5c44c;
 }
 
-.warning{
-    margin-top:30px;
+.saveText{
+    margin-top:20px;
+    color:#555;
     font-size:10px;
-    color:#666;
     letter-spacing:2px;
 }
 
 @keyframes glitch{
     0%,90%,100%{transform:translate(0)}
-    92%{transform:translate(-4px,2px)}
-    94%{transform:translate(4px,-2px)}
+    92%{transform:translate(-5px,2px)}
+    95%{transform:translate(5px,-2px)}
 }
 
-/* HUD */
+/* =========================
+HUD
+========================= */
 
 #hud{
     position:fixed;
     inset:0;
-    z-index:10;
+    z-index:20;
+    display:none;
     pointer-events:none;
     color:white;
-    display:none;
-}
-
-.top-left{
-    position:absolute;
-    top:20px;
-    left:20px;
-    text-shadow:0 2px 5px #000;
+    text-shadow:0 2px 4px #000;
 }
 
 .level{
+    position:absolute;
+    top:20px;
+    left:20px;
     font-size:22px;
     letter-spacing:4px;
 }
 
 .objective{
-    margin-top:8px;
+    position:absolute;
+    top:55px;
+    left:20px;
     font-size:11px;
     color:#ddd;
 }
 
-.top-right{
+.status{
     position:absolute;
     top:20px;
     right:20px;
     text-align:right;
-    font-size:11px;
-    color:#bbb;
+    font-size:10px;
+    color:#aaa;
 }
 
-.bar-container{
+#healthBox{
     position:absolute;
+    left:20px;
     bottom:25px;
-    left:25px;
     width:190px;
 }
 
-.bar-label{
+.label{
     font-size:10px;
     letter-spacing:2px;
     margin-bottom:5px;
 }
 
 .bar{
-    height:7px;
+    width:100%;
+    height:8px;
     background:rgba(255,255,255,.15);
-    border:1px solid rgba(255,255,255,.3);
+}
+
+#health{
+    width:100%;
+    height:100%;
+    background:#bd3333;
 }
 
 #stamina{
-    height:100%;
     width:100%;
-    background:#d8c95a;
+    height:100%;
+    background:#d6c75d;
 }
 
-/* CROSSHAIR */
+.barSpace{
+    margin-top:12px;
+}
+
+/* =========================
+CENTER MESSAGE
+========================= */
+
+#message{
+    position:fixed;
+    z-index:40;
+    left:50%;
+    top:20%;
+    transform:translateX(-50%);
+    color:white;
+    font-size:13px;
+    letter-spacing:4px;
+    opacity:0;
+    transition:opacity .5s;
+    pointer-events:none;
+    text-align:center;
+}
+
+/* =========================
+CROSSHAIR
+========================= */
 
 #crosshair{
-    position:absolute;
+    position:fixed;
+    z-index:25;
     left:50%;
     top:50%;
+    transform:translate(-50%,-50%);
     width:12px;
     height:12px;
-    transform:translate(-50%,-50%);
 }
 
-#crosshair::before,
-#crosshair::after{
+#crosshair:before,
+#crosshair:after{
     content:"";
     position:absolute;
-    background:rgba(255,255,255,.8);
+    background:white;
+    opacity:.8;
 }
 
-#crosshair::before{
+#crosshair:before{
     width:12px;
     height:1px;
     top:5px;
 }
 
-#crosshair::after{
-    width:1px;
+#crosshair:after{
     height:12px;
+    width:1px;
     left:5px;
 }
 
-/* MOBILE */
+/* =========================
+MOBILE
+========================= */
 
-#mobileControls{
-    display:none;
+#mobile{
     position:fixed;
     inset:0;
-    z-index:20;
+    z-index:50;
+    display:none;
     pointer-events:none;
 }
 
 #joystick{
     position:absolute;
     left:25px;
-    bottom:35px;
+    bottom:30px;
     width:125px;
     height:125px;
     border-radius:50%;
     border:2px solid rgba(255,255,255,.25);
-    background:rgba(0,0,0,.18);
+    background:rgba(0,0,0,.2);
     pointer-events:auto;
 }
 
@@ -218,97 +254,136 @@ html,body{
     width:50px;
     height:50px;
     border-radius:50%;
-    background:rgba(255,255,255,.28);
-    border:1px solid rgba(255,255,255,.5);
+    background:rgba(255,255,255,.25);
 }
 
-.mobile-button{
+.mButton{
     position:absolute;
-    pointer-events:auto;
-    border:1px solid rgba(255,255,255,.35);
-    background:rgba(0,0,0,.35);
-    color:#fff;
-    border-radius:50%;
     width:65px;
     height:65px;
-    font-size:10px;
-    letter-spacing:1px;
+    border-radius:50%;
+    border:1px solid rgba(255,255,255,.4);
+    background:rgba(0,0,0,.35);
+    color:white;
+    font-size:9px;
+    pointer-events:auto;
 }
 
-#runButton{
-    right:30px;
-    bottom:40px;
+#runBtn{
+    right:25px;
+    bottom:35px;
 }
 
-#flashButton{
-    right:105px;
+#flashBtn{
+    right:100px;
     bottom:105px;
 }
 
-#mobileInfo{
-    position:absolute;
-    top:20px;
-    right:20px;
-    color:rgba(255,255,255,.5);
-    font-size:9px;
-    text-align:right;
+#interactBtn{
+    right:25px;
+    bottom:110px;
 }
 
-/* VHS */
+#crosshairMobile{
+    position:absolute;
+    left:50%;
+    top:50%;
+    transform:translate(-50%,-50%);
+    width:7px;
+    height:7px;
+    border:1px solid white;
+    border-radius:50%;
+}
+
+/* =========================
+VHS
+========================= */
 
 #vhs{
     position:fixed;
     inset:0;
-    z-index:15;
+    z-index:30;
     pointer-events:none;
     display:none;
     background:
-        repeating-linear-gradient(
-            to bottom,
-            rgba(255,255,255,.025) 0px,
-            rgba(255,255,255,.025) 1px,
-            transparent 1px,
-            transparent 4px
-        );
-    mix-blend-mode:screen;
+    repeating-linear-gradient(
+        to bottom,
+        rgba(255,255,255,.025) 0px,
+        rgba(255,255,255,.025) 1px,
+        transparent 1px,
+        transparent 4px
+    );
 }
 
 #vignette{
     position:fixed;
     inset:0;
-    z-index:14;
+    z-index:29;
     pointer-events:none;
     display:none;
-    background:radial-gradient(
+    background:
+    radial-gradient(
         ellipse at center,
-        transparent 45%,
-        rgba(0,0,0,.65) 100%
+        transparent 42%,
+        rgba(0,0,0,.75)
     );
 }
 
-/* MESSAGE */
+/* =========================
+INVENTORY
+========================= */
 
-#message{
+#inventory{
     position:fixed;
-    left:50%;
-    top:20%;
-    transform:translateX(-50%);
-    z-index:30;
-    color:#eee;
-    font-size:13px;
-    letter-spacing:4px;
-    opacity:0;
-    transition:opacity 1s;
-    pointer-events:none;
-    text-shadow:0 0 15px #000;
+    right:20px;
+    bottom:25px;
+    z-index:25;
+    color:white;
+    font-size:11px;
+    letter-spacing:2px;
+    text-align:right;
 }
 
-/* EXIT SCREEN */
+/* =========================
+DEATH
+========================= */
 
-#exitScreen{
+#death{
     position:fixed;
     inset:0;
-    z-index:90;
+    z-index:500;
+    display:none;
+    justify-content:center;
+    align-items:center;
+    background:#050000;
+    color:white;
+    text-align:center;
+}
+
+.deathTitle{
+    font-size:clamp(55px,12vw,120px);
+    letter-spacing:12px;
+    color:#a00;
+}
+
+.deathText{
+    margin-top:15px;
+    color:#777;
+    letter-spacing:3px;
+}
+
+#restart{
+    margin-top:40px;
+}
+
+/* =========================
+LEVEL SCREEN
+========================= */
+
+#levelScreen{
+    position:fixed;
+    inset:0;
+    z-index:600;
     display:none;
     align-items:center;
     justify-content:center;
@@ -317,52 +392,109 @@ html,body{
     text-align:center;
 }
 
-.exitTitle{
-    font-size:clamp(45px,10vw,100px);
-    letter-spacing:12px;
-    color:#ddd;
+.levelNumber{
+    font-size:clamp(60px,15vw,150px);
+    letter-spacing:15px;
 }
 
-.exitText{
-    margin-top:20px;
-    color:#888;
-    letter-spacing:3px;
+.levelDesc{
+    color:#777;
+    letter-spacing:4px;
+    margin-top:15px;
 }
 
-#continueButton{
-    margin-top:40px;
-    padding:15px 40px;
-    background:transparent;
-    color:white;
-    border:1px solid #777;
-    cursor:pointer;
+/* =========================
+JUMPSCARE
+========================= */
+
+#jumpscare{
+    position:fixed;
+    inset:0;
+    z-index:800;
+    display:none;
+    background:#000;
+    align-items:center;
+    justify-content:center;
 }
 
-/* MOBILE MODE */
+.scareFace{
+    width:45vw;
+    max-width:400px;
+    aspect-ratio:1;
+    border-radius:50%;
+    background:#050505;
+    position:relative;
+    box-shadow:
+    0 0 100px #900,
+    inset 0 0 80px #000;
+}
+
+.eye{
+    position:absolute;
+    width:18%;
+    height:10%;
+    background:#ddd;
+    border-radius:50%;
+    top:35%;
+}
+
+.eye.left{
+    left:20%;
+}
+
+.eye.right{
+    right:20%;
+}
+
+.mouth{
+    position:absolute;
+    width:55%;
+    height:25%;
+    left:22.5%;
+    bottom:18%;
+    border-radius:0 0 50% 50%;
+    background:#900;
+}
+
+/* =========================
+RESPONSIVE
+========================= */
 
 @media(max-width:800px){
-    .top-left{
+
+    #crosshair{
+        display:none;
+    }
+
+    #mobile{
+        display:block;
+    }
+
+    .level{
         top:12px;
+        left:12px;
+        font-size:16px;
+    }
+
+    .objective{
+        top:40px;
         left:12px;
     }
 
-    .top-right{
+    .status{
         top:12px;
         right:12px;
     }
 
-    .level{
-        font-size:16px;
-    }
-
-    .bar-container{
-        bottom:25px;
-        left:25px;
+    #healthBox{
+        left:20px;
+        bottom:180px;
         width:130px;
     }
 
-    #crosshair{
-        display:none;
+    #inventory{
+        bottom:185px;
+        right:20px;
     }
 }
 </style>
@@ -375,1061 +507,2006 @@ html,body{
 <!-- INTRO -->
 
 <div id="intro">
-    <div class="intro-content">
-        <div class="glitch">BACKROOMS</div>
 
-        <div class="subtitle">
-            LEVEL 0 // THE HABITUAL ROOMS
-        </div>
+<div class="introBox">
 
-        <button id="startButton">
-            OYUNA BAŞLA
-        </button>
+<div class="logo">BACKROOMS</div>
 
-        <div class="warning">
-            KAYBOLMAK KOLAYDIR.
-        </div>
-    </div>
+<div class="introSub">
+SURVIVAL // LEVEL 0
 </div>
+
+<button id="start" class="bigButton">
+OYUNA BAŞLA
+</button>
+
+<div class="saveText">
+KAYIT SİSTEMİ AKTİF
+</div>
+
+</div>
+
+</div>
+
 
 <!-- HUD -->
 
 <div id="hud">
 
-    <div class="top-left">
-        <div class="level">LEVEL 0</div>
-        <div class="objective">
-            ÇIKIŞI BUL.
-        </div>
-    </div>
+<div class="level" id="levelText">
+LEVEL 0
+</div>
 
-    <div class="top-right">
-        SIGNAL: LOST<br>
-        CAM 01 // UNKNOWN
-    </div>
+<div class="objective" id="objective">
+ÇIKIŞI BUL
+</div>
 
-    <div id="crosshair"></div>
+<div class="status">
+SIGNAL: LOST<br>
+CAM: UNKNOWN
+</div>
 
-    <div class="bar-container">
-        <div class="bar-label">STAMINA</div>
-        <div class="bar">
-            <div id="stamina"></div>
-        </div>
-    </div>
+<div id="crosshair"></div>
+
+<div id="healthBox">
+
+<div class="label">
+HEALTH
+</div>
+
+<div class="bar">
+<div id="health"></div>
+</div>
+
+<div class="label barSpace">
+STAMINA
+</div>
+
+<div class="bar">
+<div id="stamina"></div>
+</div>
 
 </div>
 
-<!-- MOBILE -->
-
-<div id="mobileControls">
-
-    <div id="joystick">
-        <div id="stick"></div>
-    </div>
-
-    <button class="mobile-button" id="runButton">
-        KOŞ
-    </button>
-
-    <button class="mobile-button" id="flashButton">
-        FENER
-    </button>
-
-    <div id="mobileInfo">
-        PARMAĞINLA ETRAFI İNCELE
-    </div>
+<div id="inventory">
+KEY: NO
+</div>
 
 </div>
+
+
+<div id="message"></div>
 
 <div id="vhs"></div>
 <div id="vignette"></div>
-<div id="message"></div>
 
-<!-- EXIT -->
 
-<div id="exitScreen">
-    <div>
-        <div class="exitTitle">EXIT</div>
-        <div class="exitText">
-            LEVEL 0 TAMAMLANDI
-        </div>
+<!-- MOBILE -->
 
-        <button id="continueButton">
-            DEVAM ET
-        </button>
-    </div>
+<div id="mobile">
+
+<div id="crosshairMobile"></div>
+
+<div id="joystick">
+<div id="stick"></div>
 </div>
+
+<button id="runBtn" class="mButton">
+KOŞ
+</button>
+
+<button id="flashBtn" class="mButton">
+FENER
+</button>
+
+<button id="interactBtn" class="mButton">
+ETKİLEŞ
+</button>
+
+</div>
+
+
+<!-- DEATH -->
+
+<div id="death">
+
+<div>
+
+<div class="deathTitle">
+YOU DIED
+</div>
+
+<div class="deathText">
+ENTITY SENİ YAKALADI
+</div>
+
+<button id="restart" class="bigButton">
+TEKRAR DENE
+</button>
+
+</div>
+
+</div>
+
+
+<!-- LEVEL SCREEN -->
+
+<div id="levelScreen">
+
+<div>
+
+<div class="levelNumber" id="nextLevel">
+LEVEL 1
+</div>
+
+<div class="levelDesc">
+YOU SHOULD NOT BE HERE.
+</div>
+
+</div>
+
+</div>
+
+
+<!-- JUMPSCARE -->
+
+<div id="jumpscare">
+
+<div class="scareFace">
+
+<div class="eye left"></div>
+<div class="eye right"></div>
+
+<div class="mouth"></div>
+
+</div>
+
+</div>
+
+
+<script type="importmap">
+{
+"imports":{
+"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js"
+}
+}
+</script>
 
 
 <script type="module">
 
-import * as THREE from
-"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js";
+import * as THREE from "three";
 
-import { PointerLockControls } from
+import {
+PointerLockControls
+}
+from
 "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/controls/PointerLockControls.js";
 
 
-/* =========================================
-   BASIC SETUP
-========================================= */
+/* =========================================================
+GAME STATE
+========================================================= */
 
-const game = document.getElementById("game");
+let currentLevel =
+Number(localStorage.getItem("backroomsLevel") || 0);
 
-const scene = new THREE.Scene();
+let hasKey =
+localStorage.getItem("backroomsKey")==="true";
 
-scene.background = new THREE.Color(0x16140b);
+let health=100;
+let stamina=100;
 
-scene.fog = new THREE.FogExp2(
-    0x25210f,
-    0.018
+let gameStarted=false;
+let dead=false;
+
+let flashlightOn=true;
+
+let entityActive=false;
+let entityChasing=false;
+
+let levelTransition=false;
+
+let audio=null;
+
+
+/* =========================================================
+THREE
+========================================================= */
+
+const scene=
+new THREE.Scene();
+
+const camera=
+new THREE.PerspectiveCamera(
+75,
+innerWidth/innerHeight,
+.1,
+500
 );
 
-const camera = new THREE.PerspectiveCamera(
-    75,
-    window.innerWidth / window.innerHeight,
-    0.1,
-    500
+camera.position.set(
+0,1.7,0
 );
 
-camera.position.set(0,1.7,0);
 
-
-const renderer = new THREE.WebGLRenderer({
-    antialias:true
+const renderer=
+new THREE.WebGLRenderer({
+antialias:true
 });
 
 renderer.setSize(
-    window.innerWidth,
-    window.innerHeight
+innerWidth,
+innerHeight
 );
 
 renderer.setPixelRatio(
-    Math.min(window.devicePixelRatio,2)
+Math.min(devicePixelRatio,2)
 );
 
-renderer.shadowMap.enabled = true;
+renderer.shadowMap.enabled=true;
 
-game.appendChild(renderer.domElement);
+document
+.getElementById("game")
+.appendChild(renderer.domElement);
 
 
-/* =========================================
-   LIGHT
-========================================= */
+/* =========================================================
+FOG
+========================================================= */
 
-const ambient = new THREE.HemisphereLight(
-    0xffeeaa,
-    0x151515,
-    1.5
+scene.background=
+new THREE.Color(0x15130a);
+
+scene.fog=
+new THREE.FogExp2(
+0x25210e,
+.018
+);
+
+
+/* =========================================================
+LIGHT
+========================================================= */
+
+const ambient=
+new THREE.HemisphereLight(
+0xffefaa,
+0x111111,
+1.4
 );
 
 scene.add(ambient);
 
 
-/* =========================================
-   FLOOR
-========================================= */
+/* =========================================================
+WORLD ARRAYS
+========================================================= */
 
-const floorMaterial = new THREE.MeshStandardMaterial({
-    color:0x80772f,
-    roughness:0.9
+let walls=[];
+let lights=[];
+let keysObjects=[];
+
+let exitDoor=null;
+
+let entity=null;
+
+
+/* =========================================================
+CLEAR LEVEL
+========================================================= */
+
+function clearLevel(){
+
+walls.forEach(w=>{
+scene.remove(w);
 });
 
-const floor = new THREE.Mesh(
-    new THREE.PlaneGeometry(300,300),
-    floorMaterial
-);
-
-floor.rotation.x = -Math.PI/2;
-floor.position.y = 0;
-
-floor.receiveShadow = true;
-
-scene.add(floor);
-
-
-/* =========================================
-   CEILING
-========================================= */
-
-const ceilingMaterial = new THREE.MeshStandardMaterial({
-    color:0x6f6b42,
-    roughness:1
+lights.forEach(l=>{
+scene.remove(l.group);
 });
 
-const ceiling = new THREE.Mesh(
-    new THREE.PlaneGeometry(300,300),
-    ceilingMaterial
-);
-
-ceiling.rotation.x = Math.PI/2;
-ceiling.position.y = 4;
-
-scene.add(ceiling);
-
-
-/* =========================================
-   WALL MATERIAL
-========================================= */
-
-const wallMaterial = new THREE.MeshStandardMaterial({
-    color:0xb7a947,
-    roughness:0.95
+keysObjects.forEach(k=>{
+scene.remove(k);
 });
 
+if(exitDoor){
+scene.remove(exitDoor);
+exitDoor=null;
+}
 
-/* =========================================
-   WALL CREATOR
-========================================= */
+if(entity){
+scene.remove(entity);
+entity=null;
+}
 
-function createWall(x,z,w,d){
-
-    const wall = new THREE.Mesh(
-        new THREE.BoxGeometry(w,4,d),
-        wallMaterial
-    );
-
-    wall.position.set(
-        x,
-        2,
-        z
-    );
-
-    wall.castShadow = true;
-    wall.receiveShadow = true;
-
-    scene.add(wall);
+walls=[];
+lights=[];
+keysObjects=[];
 }
 
 
-/* =========================================
-   BACKROOMS MAZE
-========================================= */
+/* =========================================================
+MATERIALS
+========================================================= */
 
-createWall(0,-35,70,1);
-createWall(-35,0,1,70);
-createWall(35,0,1,70);
-createWall(0,35,70,1);
+const wallMat=
+new THREE.MeshStandardMaterial({
+color:0xb6a847,
+roughness:.95
+});
 
-createWall(-15,-15,1,25);
-createWall(10,-18,1,30);
-createWall(20,5,20,1);
-createWall(-20,15,20,1);
-createWall(0,5,1,20);
-createWall(15,25,1,20);
-createWall(-10,28,25,1);
+const floorMat=
+new THREE.MeshStandardMaterial({
+color:0x77702e,
+roughness:1
+});
 
-createWall(-25,-5,15,1);
-createWall(25,-20,15,1);
-
-createWall(-5,-28,1,12);
-createWall(8,12,15,1);
+const darkWallMat=
+new THREE.MeshStandardMaterial({
+color:0x292929,
+roughness:1
+});
 
 
-/* =========================================
-   FLUORESCENT LIGHTS
-========================================= */
+/* =========================================================
+WALL
+========================================================= */
 
-const lights = [];
+function wall(
+x,z,w,d,
+material=wallMat
+){
+
+const obj=
+new THREE.Mesh(
+new THREE.BoxGeometry(
+w,4,d
+),
+material
+);
+
+obj.position.set(
+x,2,z
+);
+
+obj.castShadow=true;
+obj.receiveShadow=true;
+
+scene.add(obj);
+
+walls.push(obj);
+
+return obj;
+}
+
+
+/* =========================================================
+LIGHT
+========================================================= */
 
 function createLight(x,z){
 
-    const group = new THREE.Group();
+const group=
+new THREE.Group();
 
-    const lampMaterial =
-        new THREE.MeshBasicMaterial({
-            color:0xffffff
-        });
-
-    const lamp = new THREE.Mesh(
-        new THREE.BoxGeometry(2.5,.08,.3),
-        lampMaterial
-    );
-
-    lamp.position.y = 3.93;
-
-    group.add(lamp);
-
-    const light = new THREE.PointLight(
-        0xfff4b0,
-        4,
-        15
-    );
-
-    light.position.set(
-        0,
-        -0.3,
-        0
-    );
-
-    group.add(light);
-
-    group.position.set(x,0,z);
-
-    scene.add(group);
-
-    lights.push({
-        light,
-        lamp
-    });
-}
-
-for(let x=-30;x<=30;x+=15){
-    for(let z=-30;z<=30;z+=15){
-        createLight(x,z);
-    }
-}
-
-
-/* =========================================
-   ENTITY
-========================================= */
-
-const entity = new THREE.Group();
-
-const entityMaterial =
-    new THREE.MeshBasicMaterial({
-        color:0x020202
-    });
-
-const body = new THREE.Mesh(
-    new THREE.CylinderGeometry(.35,.5,2.5,8),
-    entityMaterial
+const lamp=
+new THREE.Mesh(
+new THREE.BoxGeometry(
+2.4,.08,.3
+),
+new THREE.MeshBasicMaterial({
+color:0xffffff
+})
 );
 
-body.position.y = 1.25;
+lamp.position.y=3.9;
+
+group.add(lamp);
+
+const point=
+new THREE.PointLight(
+0xfff0a0,
+4,
+16
+);
+
+point.position.y=3.5;
+
+group.add(point);
+
+group.position.set(
+x,0,z
+);
+
+scene.add(group);
+
+lights.push({
+group,
+light:point
+});
+
+}
+
+
+/* =========================================================
+FLOOR
+========================================================= */
+
+function createFloor(){
+
+const floor=
+new THREE.Mesh(
+new THREE.PlaneGeometry(
+300,300
+),
+floorMat
+);
+
+floor.rotation.x=-Math.PI/2;
+
+scene.add(floor);
+
+}
+
+
+/* =========================================================
+LEVEL 0
+========================================================= */
+
+function buildLevel0(){
+
+clearLevel();
+
+createFloor();
+
+scene.background=
+new THREE.Color(0x15130a);
+
+scene.fog=
+new THREE.FogExp2(
+0x25210e,
+.018
+);
+
+camera.position.set(
+0,1.7,0
+);
+
+camera.rotation.set(0,0,0);
+
+
+/* OUTER WALLS */
+
+wall(0,-40,80,1);
+wall(0,40,80,1);
+wall(-40,0,1,80);
+wall(40,0,1,80);
+
+
+/* MAZE */
+
+wall(-20,-15,1,30);
+wall(10,-20,1,35);
+
+wall(20,5,25,1);
+wall(-20,15,25,1);
+
+wall(0,5,1,20);
+wall(15,25,1,20);
+
+wall(-10,30,30,1);
+wall(-25,-5,20,1);
+
+wall(25,-25,20,1);
+wall(-5,-30,1,15);
+
+wall(8,12,20,1);
+
+
+/* LIGHTS */
+
+for(
+let x=-30;
+x<=30;
+x+=15
+){
+
+for(
+let z=-30;
+z<=30;
+z+=15
+){
+
+createLight(x,z);
+
+}
+
+}
+
+
+/* KEY */
+
+createKey(
+-25,
+25
+);
+
+
+/* EXIT */
+
+createExit(
+30,
+-30
+);
+
+
+/* ENTITY */
+
+createEntity(
+25,
+25
+);
+
+
+/* OBJECTIVE */
+
+document
+.getElementById("objective")
+.innerText=
+hasKey
+?"KAPIYA GİT"
+:"ANAHTARI BUL";
+
+
+updateInventory();
+
+}
+
+
+/* =========================================================
+LEVEL 1
+========================================================= */
+
+function buildLevel1(){
+
+clearLevel();
+
+createFloor();
+
+scene.background=
+new THREE.Color(0x080808);
+
+scene.fog=
+new THREE.FogExp2(
+0x090909,
+.025
+);
+
+camera.position.set(
+0,1.7,0
+);
+
+camera.rotation.set(
+0,0,0
+);
+
+
+/* OUTER */
+
+wall(
+0,-45,
+90,1,
+darkWallMat
+);
+
+wall(
+0,45,
+90,1,
+darkWallMat
+);
+
+wall(
+-45,0,
+1,90,
+darkWallMat
+);
+
+wall(
+45,0,
+1,90,
+darkWallMat
+);
+
+
+/* ROOMS */
+
+wall(-15,-15,1,30,darkWallMat);
+wall(15,-15,1,30,darkWallMat);
+
+wall(-15,15,30,1,darkWallMat);
+wall(15,25,30,1,darkWallMat);
+
+wall(-30,0,20,1,darkWallMat);
+wall(30,-5,20,1,darkWallMat);
+
+wall(0,30,1,25,darkWallMat);
+wall(0,-30,1,25,darkWallMat);
+
+
+/* LIGHTS */
+
+for(
+let x=-30;
+x<=30;
+x+=15
+){
+
+for(
+let z=-30;
+z<=30;
+z+=15
+){
+
+createLight(x,z);
+
+}
+
+}
+
+
+/* KEY */
+
+createKey(
+25,
+-30
+);
+
+
+/* EXIT */
+
+createExit(
+-30,
+30
+);
+
+
+/* ENTITY */
+
+createEntity(
+25,
+25
+);
+
+
+/* OBJECTIVE */
+
+document
+.getElementById("objective")
+.innerText=
+hasKey
+?"LEVEL 1 ÇIKIŞINA GİT"
+:"ANAHTARI BUL";
+
+updateInventory();
+
+}
+
+
+/* =========================================================
+KEY
+========================================================= */
+
+function createKey(x,z){
+
+const key=
+new THREE.Group();
+
+const ring=
+new THREE.Mesh(
+new THREE.TorusGeometry(
+.18,.045,8,16
+),
+new THREE.MeshBasicMaterial({
+color:0xffd83d
+})
+);
+
+ring.rotation.x=
+Math.PI/2;
+
+key.add(ring);
+
+
+const stem=
+new THREE.Mesh(
+new THREE.BoxGeometry(
+.06,.35,.06
+),
+new THREE.MeshBasicMaterial({
+color:0xffd83d
+})
+);
+
+stem.position.y=-.15;
+
+key.add(stem);
+
+key.position.set(
+x,
+1.2,
+z
+);
+
+scene.add(key);
+
+keysObjects.push(key);
+
+}
+
+
+/* =========================================================
+EXIT
+========================================================= */
+
+function createExit(x,z){
+
+const material=
+new THREE.MeshStandardMaterial({
+color:0x141414,
+roughness:.7
+});
+
+exitDoor=
+new THREE.Mesh(
+new THREE.BoxGeometry(
+2.2,3.7,.4
+),
+material
+);
+
+exitDoor.position.set(
+x,
+1.85,
+z
+);
+
+scene.add(exitDoor);
+
+
+/* SIGN */
+
+const sign=
+new THREE.Mesh(
+new THREE.BoxGeometry(
+1.4,.3,.05
+),
+new THREE.MeshBasicMaterial({
+color:0xff2020
+})
+);
+
+sign.position.set(
+x,
+3.8,
+z-.25
+);
+
+scene.add(sign);
+
+}
+
+
+/* =========================================================
+ENTITY
+========================================================= */
+
+function createEntity(x,z){
+
+entity=
+new THREE.Group();
+
+const material=
+new THREE.MeshBasicMaterial({
+color:0x010101
+});
+
+const body=
+new THREE.Mesh(
+new THREE.CylinderGeometry(
+.4,.55,2.5,8
+),
+material
+);
+
+body.position.y=1.25;
 
 entity.add(body);
 
 
-const head = new THREE.Mesh(
-    new THREE.SphereGeometry(.4,12,12),
-    entityMaterial
+const head=
+new THREE.Mesh(
+new THREE.SphereGeometry(
+.42,12,12
+),
+material
 );
 
-head.position.y = 2.8;
+head.position.y=2.8;
 
 entity.add(head);
 
 
 entity.position.set(
-    25,
-    0,
-    20
+x,0,z
 );
 
-entity.visible = false;
+entity.visible=false;
 
 scene.add(entity);
 
+}
 
-/* =========================================
-   EXIT DOOR
-========================================= */
 
-const doorMaterial =
-    new THREE.MeshStandardMaterial({
-        color:0x171717,
-        roughness:.8
-    });
+/* =========================================================
+AUDIO
+========================================================= */
 
-const door = new THREE.Mesh(
-    new THREE.BoxGeometry(2,3.5,.3),
-    doorMaterial
+function startAudio(){
+
+if(audio)return;
+
+try{
+
+audio=
+new (
+window.AudioContext ||
+window.webkitAudioContext
+)();
+
+const oscillator=
+audio.createOscillator();
+
+const gain=
+audio.createGain();
+
+oscillator.type="sine";
+
+oscillator.frequency.value=58;
+
+gain.gain.value=.018;
+
+oscillator.connect(gain);
+
+gain.connect(
+audio.destination
 );
 
-door.position.set(
-    28,
-    1.75,
-    -27
+oscillator.start();
+
+}catch(e){}
+
+}
+
+
+/* =========================================================
+SOUND
+========================================================= */
+
+function beep(freq=200,duration=.1){
+
+if(!audio)return;
+
+const osc=
+audio.createOscillator();
+
+const gain=
+audio.createGain();
+
+osc.frequency.value=freq;
+
+gain.gain.value=.06;
+
+osc.connect(gain);
+gain.connect(audio.destination);
+
+osc.start();
+
+osc.stop(
+audio.currentTime+duration
 );
 
-scene.add(door);
+}
 
 
-/* EXIT SIGN */
+/* =========================================================
+FLASHLIGHT
+========================================================= */
 
-const signMaterial =
-    new THREE.MeshBasicMaterial({
-        color:0xff2222
-    });
-
-const sign = new THREE.Mesh(
-    new THREE.BoxGeometry(1.4,.3,.05),
-    signMaterial
+const flashlight=
+new THREE.SpotLight(
+0xffffff,
+20,
+35,
+Math.PI/7,
+.5,
+1
 );
-
-sign.position.set(
-    28,
-    3.7,
-    -26.8
-);
-
-scene.add(sign);
-
-
-/* =========================================
-   PLAYER
-========================================= */
-
-const controls =
-    new PointerLockControls(
-        camera,
-        document.body
-    );
-
-
-let started = false;
-
-let keys = {
-    w:false,
-    a:false,
-    s:false,
-    d:false,
-    shift:false
-};
-
-let stamina = 100;
-
-let flashlightOn = true;
-
-let mobileForward = 0;
-let mobileSide = 0;
-let mobileRunning = false;
-
-
-/* =========================================
-   FLASHLIGHT
-========================================= */
-
-const flashlight =
-    new THREE.SpotLight(
-        0xffffff,
-        20,
-        35,
-        Math.PI/7,
-        .5,
-        1
-    );
-
-flashlight.position.set(0,0,0);
 
 camera.add(flashlight);
 
 scene.add(camera);
 
 
-/* =========================================
-   PC KEYBOARD
-========================================= */
-
-window.addEventListener("keydown",e=>{
-
-    if(e.code==="KeyW") keys.w=true;
-    if(e.code==="KeyA") keys.a=true;
-    if(e.code==="KeyS") keys.s=true;
-    if(e.code==="KeyD") keys.d=true;
-
-    if(e.code==="ShiftLeft" ||
-       e.code==="ShiftRight"){
-        keys.shift=true;
-    }
-
-    if(e.code==="KeyF"){
-        toggleFlashlight();
-    }
-});
-
-
-window.addEventListener("keyup",e=>{
-
-    if(e.code==="KeyW") keys.w=false;
-    if(e.code==="KeyA") keys.a=false;
-    if(e.code==="KeyS") keys.s=false;
-    if(e.code==="KeyD") keys.d=false;
-
-    if(e.code==="ShiftLeft" ||
-       e.code==="ShiftRight"){
-        keys.shift=false;
-    }
-});
-
-
-/* =========================================
-   FLASHLIGHT
-========================================= */
-
 function toggleFlashlight(){
 
-    flashlightOn = !flashlightOn;
+flashlightOn=!flashlightOn;
 
-    flashlight.intensity =
-        flashlightOn ? 20 : 0;
+flashlight.intensity=
+flashlightOn?20:0;
+
+beep(
+flashlightOn?500:150,
+.06
+);
+
 }
 
-document.getElementById("flashButton")
-.addEventListener("click",toggleFlashlight);
+
+/* =========================================================
+CONTROLS
+========================================================= */
+
+const controls=
+new PointerLockControls(
+camera,
+document.body
+);
+
+let keys={
+w:false,
+a:false,
+s:false,
+d:false,
+shift:false
+};
+
+window.addEventListener(
+"keydown",
+e=>{
+
+if(e.code==="KeyW")keys.w=true;
+if(e.code==="KeyA")keys.a=true;
+if(e.code==="KeyS")keys.s=true;
+if(e.code==="KeyD")keys.d=true;
+
+if(
+e.code==="ShiftLeft"||
+e.code==="ShiftRight"
+)
+keys.shift=true;
+
+if(e.code==="KeyF")
+toggleFlashlight();
+
+if(e.code==="KeyE")
+interact();
+
+});
 
 
-/* =========================================
-   MOBILE JOYSTICK
-========================================= */
+window.addEventListener(
+"keyup",
+e=>{
 
-const joystick =
-    document.getElementById("joystick");
+if(e.code==="KeyW")keys.w=false;
+if(e.code==="KeyA")keys.a=false;
+if(e.code==="KeyS")keys.s=false;
+if(e.code==="KeyD")keys.d=false;
 
-const stick =
-    document.getElementById("stick");
+if(
+e.code==="ShiftLeft"||
+e.code==="ShiftRight"
+)
+keys.shift=false;
+
+});
+
+
+/* =========================================================
+MOBILE
+========================================================= */
+
+let mobileForward=0;
+let mobileSide=0;
+let mobileRun=false;
+
+const joystick=
+document.getElementById("joystick");
+
+const stick=
+document.getElementById("stick");
 
 let joystickActive=false;
 
-joystick.addEventListener("touchstart",e=>{
-
-    joystickActive=true;
-
-},{passive:false});
-
-
-joystick.addEventListener("touchmove",e=>{
-
-    if(!joystickActive)return;
-
-    e.preventDefault();
-
-    const rect =
-        joystick.getBoundingClientRect();
-
-    const touch =
-        e.touches[0];
-
-    let x =
-        touch.clientX -
-        (rect.left + rect.width/2);
-
-    let y =
-        touch.clientY -
-        (rect.top + rect.height/2);
-
-    const max=40;
-
-    const distance =
-        Math.sqrt(x*x+y*y);
-
-    if(distance>max){
-
-        x=x/distance*max;
-        y=y/distance*max;
-
-    }
-
-    stick.style.transform =
-        `translate(${x}px,${y}px)`;
-
-    mobileSide=x/max;
-    mobileForward=-y/max;
-
-},{passive:false});
-
-
-joystick.addEventListener("touchend",()=>{
-
-    joystickActive=false;
-
-    mobileForward=0;
-    mobileSide=0;
-
-    stick.style.transform=
-        "translate(0,0)";
-});
-
-
-/* =========================================
-   MOBILE RUN
-========================================= */
-
-const runButton =
-    document.getElementById("runButton");
-
-runButton.addEventListener(
-    "touchstart",
-    ()=>{
-        mobileRunning=true;
-    }
+joystick.addEventListener(
+"touchstart",
+e=>{
+joystickActive=true;
+e.preventDefault();
+},
+{passive:false}
 );
 
-runButton.addEventListener(
-    "touchend",
-    ()=>{
-        mobileRunning=false;
-    }
+joystick.addEventListener(
+"touchmove",
+e=>{
+
+if(!joystickActive)return;
+
+e.preventDefault();
+
+const rect=
+joystick.getBoundingClientRect();
+
+const touch=e.touches[0];
+
+let x=
+touch.clientX-
+(rect.left+rect.width/2);
+
+let y=
+touch.clientY-
+(rect.top+rect.height/2);
+
+const max=40;
+
+const dist=
+Math.sqrt(x*x+y*y);
+
+if(dist>max){
+
+x=x/dist*max;
+y=y/dist*max;
+
+}
+
+stick.style.transform=
+`translate(${x}px,${y}px)`;
+
+mobileSide=x/max;
+mobileForward=-y/max;
+
+},
+{passive:false}
+);
+
+joystick.addEventListener(
+"touchend",
+()=>{
+
+joystickActive=false;
+
+mobileSide=0;
+mobileForward=0;
+
+stick.style.transform=
+"translate(0,0)";
+
+}
 );
 
 
-/* =========================================
-   MOBILE CAMERA
-========================================= */
+/* RUN */
+
+const runBtn=
+document.getElementById("runBtn");
+
+runBtn.addEventListener(
+"touchstart",
+()=>{
+mobileRun=true;
+}
+);
+
+runBtn.addEventListener(
+"touchend",
+()=>{
+mobileRun=false;
+}
+);
+
+
+/* FLASH */
+
+document
+.getElementById("flashBtn")
+.addEventListener(
+"touchstart",
+toggleFlashlight
+);
+
+
+/* INTERACT */
+
+document
+.getElementById("interactBtn")
+.addEventListener(
+"touchstart",
+interact
+);
+
+
+/* MOBILE LOOK */
 
 let lookTouch=null;
 
 renderer.domElement.addEventListener(
-    "touchstart",
-    e=>{
+"touchstart",
+e=>{
 
-        if(e.touches.length===1){
+if(e.touches.length!==1)return;
 
-            const touch=e.touches[0];
+const t=e.touches[0];
 
-            if(
-                touch.clientX >
-                window.innerWidth/2
-            ){
-                lookTouch={
-                    x:touch.clientX,
-                    y:touch.clientY
-                };
-            }
-        }
+if(
+t.clientX>
+innerWidth/2
+){
 
-    },
-    {passive:false}
+lookTouch={
+x:t.clientX,
+y:t.clientY
+};
+
+}
+
+},
+{passive:false}
 );
-
 
 renderer.domElement.addEventListener(
-    "touchmove",
-    e=>{
+"touchmove",
+e=>{
 
-        if(!lookTouch)return;
+if(!lookTouch)return;
 
-        e.preventDefault();
+e.preventDefault();
 
-        const touch=e.touches[0];
+const t=e.touches[0];
 
-        const dx=
-            touch.clientX-lookTouch.x;
+const dx=
+t.clientX-lookTouch.x;
 
-        const dy=
-            touch.clientY-lookTouch.y;
+const dy=
+t.clientY-lookTouch.y;
 
-        const sensitivity=.003;
+camera.rotation.y-=
+dx*.003;
 
-        camera.rotation.y -=
-            dx*sensitivity;
+camera.rotation.x-=
+dy*.003;
 
-        camera.rotation.x -=
-            dy*sensitivity;
-
-        camera.rotation.x =
-            Math.max(
-                -Math.PI/2,
-                Math.min(
-                    Math.PI/2,
-                    camera.rotation.x
-                )
-            );
-
-        lookTouch={
-            x:touch.clientX,
-            y:touch.clientY
-        };
-
-    },
-    {passive:false}
+camera.rotation.x=
+Math.max(
+-Math.PI/2,
+Math.min(
+Math.PI/2,
+camera.rotation.x
+)
 );
 
+lookTouch={
+x:t.clientX,
+y:t.clientY
+};
+
+},
+{passive:false}
+);
 
 renderer.domElement.addEventListener(
-    "touchend",
-    ()=>{
-        lookTouch=null;
-    }
+"touchend",
+()=>{
+lookTouch=null;
+}
 );
 
 
-/* =========================================
-   AUDIO
-========================================= */
+/* =========================================================
+INTERACT
+========================================================= */
 
-let audioContext=null;
-let humGain=null;
+function interact(){
 
-function startAudio(){
+if(!gameStarted)return;
 
-    try{
+if(!exitDoor)return;
 
-        audioContext =
-            new (
-                window.AudioContext ||
-                window.webkitAudioContext
-            )();
+const distance=
+camera.position.distanceTo(
+exitDoor.position
+);
 
-        const osc =
-            audioContext.createOscillator();
+if(distance<3){
 
-        humGain =
-            audioContext.createGain();
+if(hasKey){
 
-        osc.type="sine";
+beep(800,.2);
 
-        osc.frequency.value=58;
+nextLevel();
 
-        humGain.gain.value=.025;
+}else{
 
-        osc.connect(humGain);
-        humGain.connect(
-            audioContext.destination
-        );
+showMessage(
+"ÖNCE ANAHTARI BUL."
+);
 
-        osc.start();
+beep(100,.15);
 
-    }catch(e){}
+}
+
+}
 
 }
 
 
-/* =========================================
-   MESSAGE
-========================================= */
+/* =========================================================
+KEY PICKUP
+========================================================= */
 
-function showMessage(text){
+function checkKeys(){
 
-    const el=
-        document.getElementById("message");
+for(
+let i=keysObjects.length-1;
+i>=0;
+i--
+){
 
-    el.innerText=text;
+const key=
+keysObjects[i];
 
-    el.style.opacity=1;
+const distance=
+camera.position.distanceTo(
+key.position
+);
 
-    setTimeout(()=>{
-        el.style.opacity=0;
-    },3000);
+if(distance<1.5){
+
+hasKey=true;
+
+localStorage.setItem(
+"backroomsKey",
+"true"
+);
+
+scene.remove(key);
+
+keysObjects.splice(i,1);
+
+updateInventory();
+
+document
+.getElementById("objective")
+.innerText=
+"KAPIYA GİT";
+
+showMessage(
+"ANAHTAR BULUNDU"
+);
+
+beep(800,.2);
+
+}
+
+}
+
 }
 
 
-/* =========================================
-   ENTITY EVENT
-========================================= */
+/* =========================================================
+INVENTORY
+========================================================= */
+
+function updateInventory(){
+
+document
+.getElementById("inventory")
+.innerText=
+"KEY: "+
+(hasKey?"YES":"NO");
+
+}
+
+
+/* =========================================================
+ENTITY AI
+========================================================= */
 
 let entityTimer=0;
 
 function updateEntity(delta){
 
-    entityTimer += delta;
+if(!entity)return;
 
-    if(entityTimer>15){
+entityTimer+=delta;
 
-        entityTimer=0;
 
-        entity.visible =
-            Math.random()>.35;
+/* RANDOM APPEAR */
 
-        if(entity.visible){
+if(!entityChasing && entityTimer>12){
 
-            const angle =
-                Math.random()*Math.PI*2;
+entityTimer=0;
 
-            const distance=18;
+if(Math.random()<.6){
 
-            entity.position.x =
-                camera.position.x +
-                Math.cos(angle)*distance;
+const angle=
+Math.random()*Math.PI*2;
 
-            entity.position.z =
-                camera.position.z +
-                Math.sin(angle)*distance;
+entity.position.x=
+camera.position.x+
+Math.cos(angle)*18;
 
-            showMessage(
-                "DID YOU SEE THAT?"
-            );
+entity.position.z=
+camera.position.z+
+Math.sin(angle)*18;
 
-            setTimeout(()=>{
-                entity.visible=false;
-            },2500);
-        }
-    }
+entity.visible=true;
 
-    if(entity.visible){
+entityActive=true;
 
-        entity.lookAt(
-            camera.position.x,
-            1.5,
-            camera.position.z
-        );
-    }
+showMessage(
+"ARKANDA BİR ŞEY VAR..."
+);
+
+}
+
 }
 
 
-/* =========================================
-   LIGHT FLICKER
-========================================= */
+/* CHASE */
 
-function updateLights(){
+if(entity.visible){
 
-    lights.forEach(item=>{
+const distance=
+entity.position.distanceTo(
+camera.position
+);
 
-        if(Math.random()<.015){
+if(distance<14){
 
-            item.light.intensity=0;
+entityChasing=true;
 
-            setTimeout(()=>{
+}
 
-                item.light.intensity =
-                    3 + Math.random()*2;
+if(entityChasing){
 
-            },80+Math.random()*250);
-        }
-    });
+const direction=
+new THREE.Vector3();
+
+direction.subVectors(
+camera.position,
+entity.position
+);
+
+direction.y=0;
+
+direction.normalize();
+
+entity.position.addScaledVector(
+direction,
+delta*2.2
+);
+
+entity.lookAt(
+camera.position.x,
+1.5,
+camera.position.z
+);
+
+
+/* PLAYER LOOKS */
+
+if(distance<2){
+
+damage(100);
+
+}
+
+}else{
+
+if(distance>25){
+
+entity.visible=false;
+entityActive=false;
+
+}
+
+}
+
+}
+
 }
 
 
-/* =========================================
-   MOVEMENT
-========================================= */
+/* =========================================================
+DAMAGE
+========================================================= */
 
-const clock =
-    new THREE.Clock();
+function damage(amount){
+
+if(dead)return;
+
+health-=amount;
+
+health=
+Math.max(0,health);
+
+document
+.getElementById("health")
+.style.width=
+health+"%";
+
+if(health<=0){
+
+die();
+
+}
+
+}
+
+
+/* =========================================================
+DEATH
+========================================================= */
+
+function die(){
+
+dead=true;
+gameStarted=false;
+
+if(
+document.pointerLockElement
+){
+document.exitPointerLock();
+}
+
+document
+.getElementById("death")
+.style.display="flex";
+
+beep(70,.5);
+
+}
+
+
+/* =========================================================
+JUMPSCARE
+========================================================= */
+
+function jumpscare(){
+
+const el=
+document.getElementById(
+"jumpscare"
+);
+
+el.style.display="flex";
+
+beep(40,.6);
+
+setTimeout(()=>{
+
+el.style.display="none";
+
+damage(30);
+
+},700);
+
+}
+
+
+/* =========================================================
+LEVEL CHANGE
+========================================================= */
+
+function nextLevel(){
+
+if(levelTransition)return;
+
+levelTransition=true;
+
+gameStarted=false;
+
+document
+.getElementById("levelScreen")
+.style.display="flex";
+
+currentLevel++;
+
+localStorage.setItem(
+"backroomsLevel",
+currentLevel
+);
+
+setTimeout(()=>{
+
+document
+.getElementById("nextLevel")
+.innerText=
+"LEVEL "+
+currentLevel;
+
+},100);
+
+
+setTimeout(()=>{
+
+document
+.getElementById("levelScreen")
+.style.display="none";
+
+health=100;
+stamina=100;
+
+entityChasing=false;
+entityActive=false;
+
+if(currentLevel===1){
+
+buildLevel1();
+
+}else{
+
+/*
+Level 2 için şimdilik
+Level 1 tekrar kullanılacak.
+Daha sonra tamamen farklı
+harita ekleyebiliriz.
+*/
+
+buildLevel1();
+
+}
+
+gameStarted=true;
+
+levelTransition=false;
+
+showMessage(
+"LEVEL "+currentLevel
+);
+
+},2500);
+
+}
+
+
+/* =========================================================
+MOVEMENT
+========================================================= */
 
 function updateMovement(delta){
 
-    let forward=0;
-    let side=0;
+let forward=0;
+let side=0;
 
-    if(keys.w) forward+=1;
-    if(keys.s) forward-=1;
-    if(keys.a) side-=1;
-    if(keys.d) side+=1;
+if(keys.w)forward++;
+if(keys.s)forward--;
 
-    forward += mobileForward;
-    side += mobileSide;
+if(keys.a)side--;
+if(keys.d)side++;
 
-    const moving =
-        Math.abs(forward)>0.05 ||
-        Math.abs(side)>0.05;
+forward+=mobileForward;
+side+=mobileSide;
 
-    let running =
-        keys.shift ||
-        mobileRunning;
+const moving=
+Math.abs(forward)>.05||
+Math.abs(side)>.05;
 
-    if(running && stamina>0 && moving){
+let running=
+keys.shift||
+mobileRun;
 
-        stamina-=35*delta;
+if(
+running &&
+moving &&
+stamina>0
+){
 
-    }else{
+stamina-=35*delta;
 
-        stamina+=25*delta;
+}else{
 
-    }
+stamina+=22*delta;
 
-    stamina =
-        Math.max(0,Math.min(100,stamina));
+}
 
-    document.getElementById(
-        "stamina"
-    ).style.width =
-        stamina+"%";
+stamina=
+Math.max(
+0,
+Math.min(
+100,
+stamina
+)
+);
 
-    if(stamina<=0){
-        running=false;
-    }
+document
+.getElementById("stamina")
+.style.width=
+stamina+"%";
 
-    const speed =
-        running ? 6.5 : 3.5;
+if(stamina<=0)
+running=false;
 
-    if(moving){
+const speed=
+running?6:3.2;
 
-        const direction =
-            new THREE.Vector3(
-                side,
-                0,
-                -forward
-            );
+if(moving){
 
-        direction.applyQuaternion(
-            camera.quaternion
-        );
+const direction=
+new THREE.Vector3(
+side,
+0,
+-forward
+);
 
-        direction.y=0;
+direction.applyQuaternion(
+camera.quaternion
+);
 
-        direction.normalize();
+direction.y=0;
 
-        camera.position.addScaledVector(
-            direction,
-            speed*delta
-        );
+direction.normalize();
 
-        camera.position.y=1.7;
-    }
+camera.position.addScaledVector(
+direction,
+speed*delta
+);
+
+camera.position.y=1.7;
+
+
+/* FOOTSTEP */
+
+if(
+Math.random()<delta*5
+){
+beep(
+running?100:70,
+.025
+);
+}
+
+}
+
 }
 
 
-/* =========================================
-   EXIT CHECK
-========================================= */
+/* =========================================================
+LIGHT FLICKER
+========================================================= */
+
+function flickerLights(){
+
+lights.forEach(item=>{
+
+if(Math.random()<.015){
+
+const old=
+item.light.intensity;
+
+item.light.intensity=0;
+
+setTimeout(()=>{
+
+item.light.intensity=
+old;
+
+},50+Math.random()*250);
+
+}
+
+});
+
+}
+
+
+/* =========================================================
+RANDOM HORROR
+========================================================= */
+
+let horrorTimer=0;
+
+function horrorEvents(delta){
+
+horrorTimer+=delta;
+
+if(horrorTimer>18){
+
+horrorTimer=0;
+
+const r=Math.random();
+
+if(r<.25){
+
+showMessage(
+"BURADA YALNIZ DEĞİLSİN."
+);
+
+}
+
+else if(r<.5){
+
+jumpscare();
+
+}
+
+else if(r<.75){
+
+entity.visible=true;
+
+entity.position.set(
+camera.position.x+12,
+0,
+camera.position.z+12
+);
+
+showMessage(
+"ARKANA BAKMA."
+);
+
+}
+
+}
+
+}
+
+
+/* =========================================================
+MESSAGE
+========================================================= */
+
+function showMessage(text){
+
+const m=
+document.getElementById("message");
+
+m.innerText=text;
+
+m.style.opacity=1;
+
+setTimeout(()=>{
+
+m.style.opacity=0;
+
+},3000);
+
+}
+
+
+/* =========================================================
+EXIT COLLISION
+========================================================= */
 
 function checkExit(){
 
-    const distance =
-        camera.position.distanceTo(
-            door.position
-        );
+if(!exitDoor)return;
 
-    if(distance<2.5){
+const distance=
+camera.position.distanceTo(
+exitDoor.position
+);
 
-        document.getElementById(
-            "exitScreen"
-        ).style.display="flex";
+if(distance<2.5){
 
-        started=false;
+if(hasKey){
 
-        if(
-            document.pointerLockElement
-        ){
-            document.exitPointerLock();
-        }
-    }
+showMessage(
+"ETKİLEŞİM: E"
+);
+
+}else{
+
+showMessage(
+"KAPI KİLİTLİ"
+);
+
+}
+
+}
+
 }
 
 
-/* =========================================
-   START GAME
-========================================= */
+/* =========================================================
+START
+========================================================= */
 
-document.getElementById(
-    "startButton"
-).addEventListener("click",()=>{
+document
+.getElementById("start")
+.addEventListener(
+"click",
+()=>{
 
-    document.getElementById(
-        "intro"
-    ).style.display="none";
+document
+.getElementById("intro")
+.style.display="none";
 
-    document.getElementById(
-        "hud"
-    ).style.display="block";
+document
+.getElementById("hud")
+.style.display="block";
 
-    document.getElementById(
-        "vhs"
-    ).style.display="block";
+document
+.getElementById("vhs")
+.style.display="block";
 
-    document.getElementById(
-        "vignette"
-    ).style.display="block";
+document
+.getElementById("vignette")
+.style.display="block";
 
-    if(window.innerWidth<=800){
+startAudio();
 
-        document.getElementById(
-            "mobileControls"
-        ).style.display="block";
+if(innerWidth>800){
 
-    }else{
+controls.lock();
 
-        controls.lock();
+}else{
 
-    }
+document
+.getElementById("mobile")
+.style.display="block";
 
-    started=true;
+}
 
-    startAudio();
+gameStarted=true;
 
-    showMessage(
-        "LEVEL 0 // FIND THE EXIT"
-    );
-});
+showMessage(
+"LEVEL "+
+currentLevel+
+" // BAŞLADI"
+);
 
-
-/* =========================================
-   PC POINTER LOCK
-========================================= */
-
-controls.addEventListener(
-    "lock",
-    ()=>{
-        started=true;
-    }
+}
 );
 
 
-/* =========================================
-   CONTINUE
-========================================= */
+/* =========================================================
+RESTART
+========================================================= */
 
-document.getElementById(
-    "continueButton"
-).addEventListener(
-    "click",
-    ()=>{
+document
+.getElementById("restart")
+.addEventListener(
+"click",
+()=>{
 
-        location.reload();
+health=100;
+stamina=100;
 
-    }
+dead=false;
+
+entityChasing=false;
+entityActive=false;
+
+document
+.getElementById("death")
+.style.display="none";
+
+if(currentLevel===0){
+
+buildLevel0();
+
+}else{
+
+buildLevel1();
+
+}
+
+gameStarted=true;
+
+showMessage(
+"TEKRAR BAŞLADI"
+);
+
+}
 );
 
 
-/* =========================================
-   RESIZE
-========================================= */
+/* =========================================================
+RESIZE
+========================================================= */
 
 window.addEventListener(
-    "resize",
-    ()=>{
+"resize",
+()=>{
 
-        camera.aspect =
-            window.innerWidth /
-            window.innerHeight;
+camera.aspect=
+innerWidth/innerHeight;
 
-        camera.updateProjectionMatrix();
+camera.updateProjectionMatrix();
 
-        renderer.setSize(
-            window.innerWidth,
-            window.innerHeight
-        );
-    }
+renderer.setSize(
+innerWidth,
+innerHeight
+);
+
+}
 );
 
 
-/* =========================================
-   GAME LOOP
-========================================= */
+/* =========================================================
+INITIAL LEVEL
+========================================================= */
+
+if(currentLevel===0){
+
+buildLevel0();
+
+}else{
+
+buildLevel1();
+
+}
+
+
+/* =========================================================
+GAME LOOP
+========================================================= */
+
+const clock=
+new THREE.Clock();
 
 function animate(){
 
-    requestAnimationFrame(animate);
+requestAnimationFrame(
+animate
+);
 
-    const delta =
-        Math.min(
-            clock.getDelta(),
-            .05
-        );
+const delta=
+Math.min(
+clock.getDelta(),
+.05
+);
 
-    if(started){
+if(gameStarted && !dead){
 
-        updateMovement(delta);
+updateMovement(delta);
 
-        updateEntity(delta);
+updateEntity(delta);
 
-        updateLights();
+checkKeys();
 
-        checkExit();
+checkExit();
 
-        /* Slight camera movement */
+flickerLights();
 
-        if(
-            Math.abs(mobileForward)>0.1 ||
-            keys.w ||
-            keys.s
-        ){
+horrorEvents(delta);
 
-            camera.position.y =
-                1.7 +
-                Math.sin(
-                    performance.now()*.012
-                )*.025;
-        }
-    }
 
-    renderer.render(
-        scene,
-        camera
-    );
+/* HEAD BOB */
+
+if(
+keys.w||
+keys.s||
+mobileForward
+){
+
+camera.position.y=
+1.7+
+Math.sin(
+performance.now()*.012
+)*.025;
+
+}
+
+}
+
+renderer.render(
+scene,
+camera
+);
+
 }
 
 animate();
