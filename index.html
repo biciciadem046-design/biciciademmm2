@@ -1,0 +1,1440 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>BACKROOMS // LEVEL 0</title>
+
+<style>
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+}
+
+html,body{
+    width:100%;
+    height:100%;
+    overflow:hidden;
+    background:#000;
+    font-family:Arial,Helvetica,sans-serif;
+    touch-action:none;
+}
+
+#game{
+    position:fixed;
+    inset:0;
+    width:100%;
+    height:100%;
+}
+
+/* INTRO */
+
+#intro{
+    position:fixed;
+    inset:0;
+    z-index:100;
+    background:
+        radial-gradient(circle at center,#2b260d 0%,#090806 65%,#000 100%);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color:white;
+    text-align:center;
+}
+
+.intro-content{
+    width:min(90%,600px);
+}
+
+.glitch{
+    font-size:clamp(45px,10vw,100px);
+    letter-spacing:12px;
+    color:#e5d87b;
+    text-shadow:
+        3px 0 #ff0000,
+        -3px 0 #00ffff;
+    animation:glitch 2s infinite;
+}
+
+.subtitle{
+    margin-top:15px;
+    color:#aaa;
+    letter-spacing:4px;
+    font-size:13px;
+}
+
+#startButton{
+    margin-top:45px;
+    padding:18px 50px;
+    border:1px solid #aaa;
+    background:rgba(255,220,70,.08);
+    color:#fff;
+    cursor:pointer;
+    letter-spacing:5px;
+    font-weight:bold;
+    transition:.3s;
+}
+
+#startButton:hover{
+    background:#d5c34d;
+    color:#111;
+    box-shadow:0 0 35px #d5c34d;
+}
+
+.warning{
+    margin-top:30px;
+    font-size:10px;
+    color:#666;
+    letter-spacing:2px;
+}
+
+@keyframes glitch{
+    0%,90%,100%{transform:translate(0)}
+    92%{transform:translate(-4px,2px)}
+    94%{transform:translate(4px,-2px)}
+}
+
+/* HUD */
+
+#hud{
+    position:fixed;
+    inset:0;
+    z-index:10;
+    pointer-events:none;
+    color:white;
+    display:none;
+}
+
+.top-left{
+    position:absolute;
+    top:20px;
+    left:20px;
+    text-shadow:0 2px 5px #000;
+}
+
+.level{
+    font-size:22px;
+    letter-spacing:4px;
+}
+
+.objective{
+    margin-top:8px;
+    font-size:11px;
+    color:#ddd;
+}
+
+.top-right{
+    position:absolute;
+    top:20px;
+    right:20px;
+    text-align:right;
+    font-size:11px;
+    color:#bbb;
+}
+
+.bar-container{
+    position:absolute;
+    bottom:25px;
+    left:25px;
+    width:190px;
+}
+
+.bar-label{
+    font-size:10px;
+    letter-spacing:2px;
+    margin-bottom:5px;
+}
+
+.bar{
+    height:7px;
+    background:rgba(255,255,255,.15);
+    border:1px solid rgba(255,255,255,.3);
+}
+
+#stamina{
+    height:100%;
+    width:100%;
+    background:#d8c95a;
+}
+
+/* CROSSHAIR */
+
+#crosshair{
+    position:absolute;
+    left:50%;
+    top:50%;
+    width:12px;
+    height:12px;
+    transform:translate(-50%,-50%);
+}
+
+#crosshair::before,
+#crosshair::after{
+    content:"";
+    position:absolute;
+    background:rgba(255,255,255,.8);
+}
+
+#crosshair::before{
+    width:12px;
+    height:1px;
+    top:5px;
+}
+
+#crosshair::after{
+    width:1px;
+    height:12px;
+    left:5px;
+}
+
+/* MOBILE */
+
+#mobileControls{
+    display:none;
+    position:fixed;
+    inset:0;
+    z-index:20;
+    pointer-events:none;
+}
+
+#joystick{
+    position:absolute;
+    left:25px;
+    bottom:35px;
+    width:125px;
+    height:125px;
+    border-radius:50%;
+    border:2px solid rgba(255,255,255,.25);
+    background:rgba(0,0,0,.18);
+    pointer-events:auto;
+}
+
+#stick{
+    position:absolute;
+    left:37px;
+    top:37px;
+    width:50px;
+    height:50px;
+    border-radius:50%;
+    background:rgba(255,255,255,.28);
+    border:1px solid rgba(255,255,255,.5);
+}
+
+.mobile-button{
+    position:absolute;
+    pointer-events:auto;
+    border:1px solid rgba(255,255,255,.35);
+    background:rgba(0,0,0,.35);
+    color:#fff;
+    border-radius:50%;
+    width:65px;
+    height:65px;
+    font-size:10px;
+    letter-spacing:1px;
+}
+
+#runButton{
+    right:30px;
+    bottom:40px;
+}
+
+#flashButton{
+    right:105px;
+    bottom:105px;
+}
+
+#mobileInfo{
+    position:absolute;
+    top:20px;
+    right:20px;
+    color:rgba(255,255,255,.5);
+    font-size:9px;
+    text-align:right;
+}
+
+/* VHS */
+
+#vhs{
+    position:fixed;
+    inset:0;
+    z-index:15;
+    pointer-events:none;
+    display:none;
+    background:
+        repeating-linear-gradient(
+            to bottom,
+            rgba(255,255,255,.025) 0px,
+            rgba(255,255,255,.025) 1px,
+            transparent 1px,
+            transparent 4px
+        );
+    mix-blend-mode:screen;
+}
+
+#vignette{
+    position:fixed;
+    inset:0;
+    z-index:14;
+    pointer-events:none;
+    display:none;
+    background:radial-gradient(
+        ellipse at center,
+        transparent 45%,
+        rgba(0,0,0,.65) 100%
+    );
+}
+
+/* MESSAGE */
+
+#message{
+    position:fixed;
+    left:50%;
+    top:20%;
+    transform:translateX(-50%);
+    z-index:30;
+    color:#eee;
+    font-size:13px;
+    letter-spacing:4px;
+    opacity:0;
+    transition:opacity 1s;
+    pointer-events:none;
+    text-shadow:0 0 15px #000;
+}
+
+/* EXIT SCREEN */
+
+#exitScreen{
+    position:fixed;
+    inset:0;
+    z-index:90;
+    display:none;
+    align-items:center;
+    justify-content:center;
+    background:#000;
+    color:white;
+    text-align:center;
+}
+
+.exitTitle{
+    font-size:clamp(45px,10vw,100px);
+    letter-spacing:12px;
+    color:#ddd;
+}
+
+.exitText{
+    margin-top:20px;
+    color:#888;
+    letter-spacing:3px;
+}
+
+#continueButton{
+    margin-top:40px;
+    padding:15px 40px;
+    background:transparent;
+    color:white;
+    border:1px solid #777;
+    cursor:pointer;
+}
+
+/* MOBILE MODE */
+
+@media(max-width:800px){
+    .top-left{
+        top:12px;
+        left:12px;
+    }
+
+    .top-right{
+        top:12px;
+        right:12px;
+    }
+
+    .level{
+        font-size:16px;
+    }
+
+    .bar-container{
+        bottom:25px;
+        left:25px;
+        width:130px;
+    }
+
+    #crosshair{
+        display:none;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div id="game"></div>
+
+<!-- INTRO -->
+
+<div id="intro">
+    <div class="intro-content">
+        <div class="glitch">BACKROOMS</div>
+
+        <div class="subtitle">
+            LEVEL 0 // THE HABITUAL ROOMS
+        </div>
+
+        <button id="startButton">
+            OYUNA BAŞLA
+        </button>
+
+        <div class="warning">
+            KAYBOLMAK KOLAYDIR.
+        </div>
+    </div>
+</div>
+
+<!-- HUD -->
+
+<div id="hud">
+
+    <div class="top-left">
+        <div class="level">LEVEL 0</div>
+        <div class="objective">
+            ÇIKIŞI BUL.
+        </div>
+    </div>
+
+    <div class="top-right">
+        SIGNAL: LOST<br>
+        CAM 01 // UNKNOWN
+    </div>
+
+    <div id="crosshair"></div>
+
+    <div class="bar-container">
+        <div class="bar-label">STAMINA</div>
+        <div class="bar">
+            <div id="stamina"></div>
+        </div>
+    </div>
+
+</div>
+
+<!-- MOBILE -->
+
+<div id="mobileControls">
+
+    <div id="joystick">
+        <div id="stick"></div>
+    </div>
+
+    <button class="mobile-button" id="runButton">
+        KOŞ
+    </button>
+
+    <button class="mobile-button" id="flashButton">
+        FENER
+    </button>
+
+    <div id="mobileInfo">
+        PARMAĞINLA ETRAFI İNCELE
+    </div>
+
+</div>
+
+<div id="vhs"></div>
+<div id="vignette"></div>
+<div id="message"></div>
+
+<!-- EXIT -->
+
+<div id="exitScreen">
+    <div>
+        <div class="exitTitle">EXIT</div>
+        <div class="exitText">
+            LEVEL 0 TAMAMLANDI
+        </div>
+
+        <button id="continueButton">
+            DEVAM ET
+        </button>
+    </div>
+</div>
+
+
+<script type="module">
+
+import * as THREE from
+"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js";
+
+import { PointerLockControls } from
+"https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/controls/PointerLockControls.js";
+
+
+/* =========================================
+   BASIC SETUP
+========================================= */
+
+const game = document.getElementById("game");
+
+const scene = new THREE.Scene();
+
+scene.background = new THREE.Color(0x16140b);
+
+scene.fog = new THREE.FogExp2(
+    0x25210f,
+    0.018
+);
+
+const camera = new THREE.PerspectiveCamera(
+    75,
+    window.innerWidth / window.innerHeight,
+    0.1,
+    500
+);
+
+camera.position.set(0,1.7,0);
+
+
+const renderer = new THREE.WebGLRenderer({
+    antialias:true
+});
+
+renderer.setSize(
+    window.innerWidth,
+    window.innerHeight
+);
+
+renderer.setPixelRatio(
+    Math.min(window.devicePixelRatio,2)
+);
+
+renderer.shadowMap.enabled = true;
+
+game.appendChild(renderer.domElement);
+
+
+/* =========================================
+   LIGHT
+========================================= */
+
+const ambient = new THREE.HemisphereLight(
+    0xffeeaa,
+    0x151515,
+    1.5
+);
+
+scene.add(ambient);
+
+
+/* =========================================
+   FLOOR
+========================================= */
+
+const floorMaterial = new THREE.MeshStandardMaterial({
+    color:0x80772f,
+    roughness:0.9
+});
+
+const floor = new THREE.Mesh(
+    new THREE.PlaneGeometry(300,300),
+    floorMaterial
+);
+
+floor.rotation.x = -Math.PI/2;
+floor.position.y = 0;
+
+floor.receiveShadow = true;
+
+scene.add(floor);
+
+
+/* =========================================
+   CEILING
+========================================= */
+
+const ceilingMaterial = new THREE.MeshStandardMaterial({
+    color:0x6f6b42,
+    roughness:1
+});
+
+const ceiling = new THREE.Mesh(
+    new THREE.PlaneGeometry(300,300),
+    ceilingMaterial
+);
+
+ceiling.rotation.x = Math.PI/2;
+ceiling.position.y = 4;
+
+scene.add(ceiling);
+
+
+/* =========================================
+   WALL MATERIAL
+========================================= */
+
+const wallMaterial = new THREE.MeshStandardMaterial({
+    color:0xb7a947,
+    roughness:0.95
+});
+
+
+/* =========================================
+   WALL CREATOR
+========================================= */
+
+function createWall(x,z,w,d){
+
+    const wall = new THREE.Mesh(
+        new THREE.BoxGeometry(w,4,d),
+        wallMaterial
+    );
+
+    wall.position.set(
+        x,
+        2,
+        z
+    );
+
+    wall.castShadow = true;
+    wall.receiveShadow = true;
+
+    scene.add(wall);
+}
+
+
+/* =========================================
+   BACKROOMS MAZE
+========================================= */
+
+createWall(0,-35,70,1);
+createWall(-35,0,1,70);
+createWall(35,0,1,70);
+createWall(0,35,70,1);
+
+createWall(-15,-15,1,25);
+createWall(10,-18,1,30);
+createWall(20,5,20,1);
+createWall(-20,15,20,1);
+createWall(0,5,1,20);
+createWall(15,25,1,20);
+createWall(-10,28,25,1);
+
+createWall(-25,-5,15,1);
+createWall(25,-20,15,1);
+
+createWall(-5,-28,1,12);
+createWall(8,12,15,1);
+
+
+/* =========================================
+   FLUORESCENT LIGHTS
+========================================= */
+
+const lights = [];
+
+function createLight(x,z){
+
+    const group = new THREE.Group();
+
+    const lampMaterial =
+        new THREE.MeshBasicMaterial({
+            color:0xffffff
+        });
+
+    const lamp = new THREE.Mesh(
+        new THREE.BoxGeometry(2.5,.08,.3),
+        lampMaterial
+    );
+
+    lamp.position.y = 3.93;
+
+    group.add(lamp);
+
+    const light = new THREE.PointLight(
+        0xfff4b0,
+        4,
+        15
+    );
+
+    light.position.set(
+        0,
+        -0.3,
+        0
+    );
+
+    group.add(light);
+
+    group.position.set(x,0,z);
+
+    scene.add(group);
+
+    lights.push({
+        light,
+        lamp
+    });
+}
+
+for(let x=-30;x<=30;x+=15){
+    for(let z=-30;z<=30;z+=15){
+        createLight(x,z);
+    }
+}
+
+
+/* =========================================
+   ENTITY
+========================================= */
+
+const entity = new THREE.Group();
+
+const entityMaterial =
+    new THREE.MeshBasicMaterial({
+        color:0x020202
+    });
+
+const body = new THREE.Mesh(
+    new THREE.CylinderGeometry(.35,.5,2.5,8),
+    entityMaterial
+);
+
+body.position.y = 1.25;
+
+entity.add(body);
+
+
+const head = new THREE.Mesh(
+    new THREE.SphereGeometry(.4,12,12),
+    entityMaterial
+);
+
+head.position.y = 2.8;
+
+entity.add(head);
+
+
+entity.position.set(
+    25,
+    0,
+    20
+);
+
+entity.visible = false;
+
+scene.add(entity);
+
+
+/* =========================================
+   EXIT DOOR
+========================================= */
+
+const doorMaterial =
+    new THREE.MeshStandardMaterial({
+        color:0x171717,
+        roughness:.8
+    });
+
+const door = new THREE.Mesh(
+    new THREE.BoxGeometry(2,3.5,.3),
+    doorMaterial
+);
+
+door.position.set(
+    28,
+    1.75,
+    -27
+);
+
+scene.add(door);
+
+
+/* EXIT SIGN */
+
+const signMaterial =
+    new THREE.MeshBasicMaterial({
+        color:0xff2222
+    });
+
+const sign = new THREE.Mesh(
+    new THREE.BoxGeometry(1.4,.3,.05),
+    signMaterial
+);
+
+sign.position.set(
+    28,
+    3.7,
+    -26.8
+);
+
+scene.add(sign);
+
+
+/* =========================================
+   PLAYER
+========================================= */
+
+const controls =
+    new PointerLockControls(
+        camera,
+        document.body
+    );
+
+
+let started = false;
+
+let keys = {
+    w:false,
+    a:false,
+    s:false,
+    d:false,
+    shift:false
+};
+
+let stamina = 100;
+
+let flashlightOn = true;
+
+let mobileForward = 0;
+let mobileSide = 0;
+let mobileRunning = false;
+
+
+/* =========================================
+   FLASHLIGHT
+========================================= */
+
+const flashlight =
+    new THREE.SpotLight(
+        0xffffff,
+        20,
+        35,
+        Math.PI/7,
+        .5,
+        1
+    );
+
+flashlight.position.set(0,0,0);
+
+camera.add(flashlight);
+
+scene.add(camera);
+
+
+/* =========================================
+   PC KEYBOARD
+========================================= */
+
+window.addEventListener("keydown",e=>{
+
+    if(e.code==="KeyW") keys.w=true;
+    if(e.code==="KeyA") keys.a=true;
+    if(e.code==="KeyS") keys.s=true;
+    if(e.code==="KeyD") keys.d=true;
+
+    if(e.code==="ShiftLeft" ||
+       e.code==="ShiftRight"){
+        keys.shift=true;
+    }
+
+    if(e.code==="KeyF"){
+        toggleFlashlight();
+    }
+});
+
+
+window.addEventListener("keyup",e=>{
+
+    if(e.code==="KeyW") keys.w=false;
+    if(e.code==="KeyA") keys.a=false;
+    if(e.code==="KeyS") keys.s=false;
+    if(e.code==="KeyD") keys.d=false;
+
+    if(e.code==="ShiftLeft" ||
+       e.code==="ShiftRight"){
+        keys.shift=false;
+    }
+});
+
+
+/* =========================================
+   FLASHLIGHT
+========================================= */
+
+function toggleFlashlight(){
+
+    flashlightOn = !flashlightOn;
+
+    flashlight.intensity =
+        flashlightOn ? 20 : 0;
+}
+
+document.getElementById("flashButton")
+.addEventListener("click",toggleFlashlight);
+
+
+/* =========================================
+   MOBILE JOYSTICK
+========================================= */
+
+const joystick =
+    document.getElementById("joystick");
+
+const stick =
+    document.getElementById("stick");
+
+let joystickActive=false;
+
+joystick.addEventListener("touchstart",e=>{
+
+    joystickActive=true;
+
+},{passive:false});
+
+
+joystick.addEventListener("touchmove",e=>{
+
+    if(!joystickActive)return;
+
+    e.preventDefault();
+
+    const rect =
+        joystick.getBoundingClientRect();
+
+    const touch =
+        e.touches[0];
+
+    let x =
+        touch.clientX -
+        (rect.left + rect.width/2);
+
+    let y =
+        touch.clientY -
+        (rect.top + rect.height/2);
+
+    const max=40;
+
+    const distance =
+        Math.sqrt(x*x+y*y);
+
+    if(distance>max){
+
+        x=x/distance*max;
+        y=y/distance*max;
+
+    }
+
+    stick.style.transform =
+        `translate(${x}px,${y}px)`;
+
+    mobileSide=x/max;
+    mobileForward=-y/max;
+
+},{passive:false});
+
+
+joystick.addEventListener("touchend",()=>{
+
+    joystickActive=false;
+
+    mobileForward=0;
+    mobileSide=0;
+
+    stick.style.transform=
+        "translate(0,0)";
+});
+
+
+/* =========================================
+   MOBILE RUN
+========================================= */
+
+const runButton =
+    document.getElementById("runButton");
+
+runButton.addEventListener(
+    "touchstart",
+    ()=>{
+        mobileRunning=true;
+    }
+);
+
+runButton.addEventListener(
+    "touchend",
+    ()=>{
+        mobileRunning=false;
+    }
+);
+
+
+/* =========================================
+   MOBILE CAMERA
+========================================= */
+
+let lookTouch=null;
+
+renderer.domElement.addEventListener(
+    "touchstart",
+    e=>{
+
+        if(e.touches.length===1){
+
+            const touch=e.touches[0];
+
+            if(
+                touch.clientX >
+                window.innerWidth/2
+            ){
+                lookTouch={
+                    x:touch.clientX,
+                    y:touch.clientY
+                };
+            }
+        }
+
+    },
+    {passive:false}
+);
+
+
+renderer.domElement.addEventListener(
+    "touchmove",
+    e=>{
+
+        if(!lookTouch)return;
+
+        e.preventDefault();
+
+        const touch=e.touches[0];
+
+        const dx=
+            touch.clientX-lookTouch.x;
+
+        const dy=
+            touch.clientY-lookTouch.y;
+
+        const sensitivity=.003;
+
+        camera.rotation.y -=
+            dx*sensitivity;
+
+        camera.rotation.x -=
+            dy*sensitivity;
+
+        camera.rotation.x =
+            Math.max(
+                -Math.PI/2,
+                Math.min(
+                    Math.PI/2,
+                    camera.rotation.x
+                )
+            );
+
+        lookTouch={
+            x:touch.clientX,
+            y:touch.clientY
+        };
+
+    },
+    {passive:false}
+);
+
+
+renderer.domElement.addEventListener(
+    "touchend",
+    ()=>{
+        lookTouch=null;
+    }
+);
+
+
+/* =========================================
+   AUDIO
+========================================= */
+
+let audioContext=null;
+let humGain=null;
+
+function startAudio(){
+
+    try{
+
+        audioContext =
+            new (
+                window.AudioContext ||
+                window.webkitAudioContext
+            )();
+
+        const osc =
+            audioContext.createOscillator();
+
+        humGain =
+            audioContext.createGain();
+
+        osc.type="sine";
+
+        osc.frequency.value=58;
+
+        humGain.gain.value=.025;
+
+        osc.connect(humGain);
+        humGain.connect(
+            audioContext.destination
+        );
+
+        osc.start();
+
+    }catch(e){}
+
+}
+
+
+/* =========================================
+   MESSAGE
+========================================= */
+
+function showMessage(text){
+
+    const el=
+        document.getElementById("message");
+
+    el.innerText=text;
+
+    el.style.opacity=1;
+
+    setTimeout(()=>{
+        el.style.opacity=0;
+    },3000);
+}
+
+
+/* =========================================
+   ENTITY EVENT
+========================================= */
+
+let entityTimer=0;
+
+function updateEntity(delta){
+
+    entityTimer += delta;
+
+    if(entityTimer>15){
+
+        entityTimer=0;
+
+        entity.visible =
+            Math.random()>.35;
+
+        if(entity.visible){
+
+            const angle =
+                Math.random()*Math.PI*2;
+
+            const distance=18;
+
+            entity.position.x =
+                camera.position.x +
+                Math.cos(angle)*distance;
+
+            entity.position.z =
+                camera.position.z +
+                Math.sin(angle)*distance;
+
+            showMessage(
+                "DID YOU SEE THAT?"
+            );
+
+            setTimeout(()=>{
+                entity.visible=false;
+            },2500);
+        }
+    }
+
+    if(entity.visible){
+
+        entity.lookAt(
+            camera.position.x,
+            1.5,
+            camera.position.z
+        );
+    }
+}
+
+
+/* =========================================
+   LIGHT FLICKER
+========================================= */
+
+function updateLights(){
+
+    lights.forEach(item=>{
+
+        if(Math.random()<.015){
+
+            item.light.intensity=0;
+
+            setTimeout(()=>{
+
+                item.light.intensity =
+                    3 + Math.random()*2;
+
+            },80+Math.random()*250);
+        }
+    });
+}
+
+
+/* =========================================
+   MOVEMENT
+========================================= */
+
+const clock =
+    new THREE.Clock();
+
+function updateMovement(delta){
+
+    let forward=0;
+    let side=0;
+
+    if(keys.w) forward+=1;
+    if(keys.s) forward-=1;
+    if(keys.a) side-=1;
+    if(keys.d) side+=1;
+
+    forward += mobileForward;
+    side += mobileSide;
+
+    const moving =
+        Math.abs(forward)>0.05 ||
+        Math.abs(side)>0.05;
+
+    let running =
+        keys.shift ||
+        mobileRunning;
+
+    if(running && stamina>0 && moving){
+
+        stamina-=35*delta;
+
+    }else{
+
+        stamina+=25*delta;
+
+    }
+
+    stamina =
+        Math.max(0,Math.min(100,stamina));
+
+    document.getElementById(
+        "stamina"
+    ).style.width =
+        stamina+"%";
+
+    if(stamina<=0){
+        running=false;
+    }
+
+    const speed =
+        running ? 6.5 : 3.5;
+
+    if(moving){
+
+        const direction =
+            new THREE.Vector3(
+                side,
+                0,
+                -forward
+            );
+
+        direction.applyQuaternion(
+            camera.quaternion
+        );
+
+        direction.y=0;
+
+        direction.normalize();
+
+        camera.position.addScaledVector(
+            direction,
+            speed*delta
+        );
+
+        camera.position.y=1.7;
+    }
+}
+
+
+/* =========================================
+   EXIT CHECK
+========================================= */
+
+function checkExit(){
+
+    const distance =
+        camera.position.distanceTo(
+            door.position
+        );
+
+    if(distance<2.5){
+
+        document.getElementById(
+            "exitScreen"
+        ).style.display="flex";
+
+        started=false;
+
+        if(
+            document.pointerLockElement
+        ){
+            document.exitPointerLock();
+        }
+    }
+}
+
+
+/* =========================================
+   START GAME
+========================================= */
+
+document.getElementById(
+    "startButton"
+).addEventListener("click",()=>{
+
+    document.getElementById(
+        "intro"
+    ).style.display="none";
+
+    document.getElementById(
+        "hud"
+    ).style.display="block";
+
+    document.getElementById(
+        "vhs"
+    ).style.display="block";
+
+    document.getElementById(
+        "vignette"
+    ).style.display="block";
+
+    if(window.innerWidth<=800){
+
+        document.getElementById(
+            "mobileControls"
+        ).style.display="block";
+
+    }else{
+
+        controls.lock();
+
+    }
+
+    started=true;
+
+    startAudio();
+
+    showMessage(
+        "LEVEL 0 // FIND THE EXIT"
+    );
+});
+
+
+/* =========================================
+   PC POINTER LOCK
+========================================= */
+
+controls.addEventListener(
+    "lock",
+    ()=>{
+        started=true;
+    }
+);
+
+
+/* =========================================
+   CONTINUE
+========================================= */
+
+document.getElementById(
+    "continueButton"
+).addEventListener(
+    "click",
+    ()=>{
+
+        location.reload();
+
+    }
+);
+
+
+/* =========================================
+   RESIZE
+========================================= */
+
+window.addEventListener(
+    "resize",
+    ()=>{
+
+        camera.aspect =
+            window.innerWidth /
+            window.innerHeight;
+
+        camera.updateProjectionMatrix();
+
+        renderer.setSize(
+            window.innerWidth,
+            window.innerHeight
+        );
+    }
+);
+
+
+/* =========================================
+   GAME LOOP
+========================================= */
+
+function animate(){
+
+    requestAnimationFrame(animate);
+
+    const delta =
+        Math.min(
+            clock.getDelta(),
+            .05
+        );
+
+    if(started){
+
+        updateMovement(delta);
+
+        updateEntity(delta);
+
+        updateLights();
+
+        checkExit();
+
+        /* Slight camera movement */
+
+        if(
+            Math.abs(mobileForward)>0.1 ||
+            keys.w ||
+            keys.s
+        ){
+
+            camera.position.y =
+                1.7 +
+                Math.sin(
+                    performance.now()*.012
+                )*.025;
+        }
+    }
+
+    renderer.render(
+        scene,
+        camera
+    );
+}
+
+animate();
+
+</script>
+
+</body>
+</html>
